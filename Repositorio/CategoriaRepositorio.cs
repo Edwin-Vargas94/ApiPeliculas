@@ -1,9 +1,9 @@
 ﻿using System;
-using ApiCategorias.Data;
-using ApiCategorias.Models;
-using ApiCategorias.Repositorio.IRepositorio;
+using ApiPeliculas.Data;
+using ApiPeliculas.Models;
+using ApiPeliculas.Repositorio.IRepositorio;
 
-namespace ApiCategorias.Repositorio
+namespace ApiPeliculas.Repositorio
 {
 	public class CategoriaRepositorio : ICategoriaRepositorio
 

@@ -1,7 +1,7 @@
 ﻿using System;
-using ApiCategorias.Models;
+using ApiPeliculas.Models;
 
-namespace ApiCategorias.Repositorio.IRepositorio
+namespace ApiPeliculas.Repositorio.IRepositorio
 {
 	public interface ICategoriaRepositorio
 	{

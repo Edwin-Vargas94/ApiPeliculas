@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ApiCategorias.Models
+namespace ApiPeliculas.Models
 {
 	public class Pelicula
 	{
@@ -15,13 +15,15 @@ namespace ApiCategorias.Models
 
 		public int Duracion { get; set; }
 
-		public string RutaImagen { get; set; }
+		public string? RutaImagen { get; set; }
 
-		public enum TipoClasificacion { Siete, Trece, Quince, Dieciocho }
+        public string? RutaLocalImagen { get; set; }
+
+        public enum TipoClasificacion { Siete, Trece, Quince, Dieciocho }
 
 		public TipoClasificacion Clasificacion { get; set; }
 
-		public DateTime FechaCreacion { get; set; }
+		public DateTime? FechaCreacion { get; set; }
 
 
 		//Relación con Categoria

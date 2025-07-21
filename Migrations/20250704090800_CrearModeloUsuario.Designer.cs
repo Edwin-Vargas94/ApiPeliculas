@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiPeliculas.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250703181059_CrearModeloCategoria")]
-    partial class CrearModeloPelicula
+    [Migration("20250704090800_CrearModeloUsuario")]
+    partial class CrearModeloUsuario
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,13 +48,16 @@ namespace ApiPeliculas.Migrations
                     b.ToTable("Categorias");
                 });
 
-            modelBuilder.Entity("ApiCategorias.Models.Categoria", b =>
+            modelBuilder.Entity("ApiCategorias.Models.Pelicula", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoriaID")
+                        .HasColumnType("int");
 
                     b.Property<int>("Clasificacion")
                         .HasColumnType("int");
@@ -74,17 +77,39 @@ namespace ApiPeliculas.Migrations
                     b.Property<string>("RutaImagen")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CategoriaID")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoriaID");
 
-                    b.ToTable("Categoria");
+                    b.ToTable("Pelicula");
                 });
 
-            modelBuilder.Entity("ApiCategorias.Models.Categoria", b =>
+            modelBuilder.Entity("ApiPeliculas.Models.Usuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NombreUsuario")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Usuario");
+                });
+
+            modelBuilder.Entity("ApiCategorias.Models.Pelicula", b =>
                 {
                     b.HasOne("ApiCategorias.Models.Categoria", "Categoria")
                         .WithMany()

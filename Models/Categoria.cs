@@ -1,7 +1,7 @@
 ﻿	using System;
 	using System.ComponentModel.DataAnnotations;
 
-namespace ApiCategorias.Models
+namespace ApiPeliculas.Models
 	{
 		public class Categoria
 		{

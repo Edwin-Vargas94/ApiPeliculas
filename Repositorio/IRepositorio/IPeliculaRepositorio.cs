@@ -1,11 +1,17 @@
 ﻿using System;
-using ApiCategorias.Models;
+using ApiPeliculas.Models;
 
-namespace ApiCategorias.Repositorio.IRepositorio
+namespace ApiPeliculas.Repositorio.IRepositorio
 {
     public interface IPeliculaRepositorio
     {
-		ICollection<Pelicula> GetPeliculas();
+        //V1
+        //ICollection<Pelicula> GetPeliculas();
+
+        //V2
+        ICollection<Pelicula> GetPeliculas(int pageNumber, int pageSize);
+
+        int GetTotalPeliculas();
 
         ICollection<Pelicula> GetPeliculasEnCategoria(int CatID);
 

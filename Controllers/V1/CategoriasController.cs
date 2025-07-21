@@ -1,13 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
-using ApiCategorias.Models; // o el namespace correcto donde estén tus modelos
-using ApiCategorias.Models.Dtos; // donde estén tus DTOs
-using ApiCategorias.Repositorio.IRepositorio; // donde esté la interfaz del repositorio
+using ApiPeliculas.Repositorio.IRepositorio; // donde esté la interfaz del repositorio
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
+using ApiPeliculas.Models.Dtos;
+using ApiPeliculas.Models;
+using Asp.Versioning;
 
-namespace ApiCategorias.Controllers
+namespace ApiPeliculas.Controllers.V1
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")] //Opción estática
+    //[Authorize(Roles = "Admin")]
+    //[ResponseCache(Duration = 20)]
+    [Route("api/v{version:apiVersion}/categorias")] //Opción dinamicá
     [ApiController]
+    [ApiVersion("1.0")]
+    //[Obsolete("Esta versión del controlador esta obsoleta")]
 
     public class CategoriasController : ControllerBase
     {
@@ -20,9 +28,21 @@ namespace ApiCategorias.Controllers
             _mapper = mapper;   
         }
 
+        [HttpGet("GetString")]
+        [Obsolete("Esta enpoint esta obsoleto")]
+        //[MapToApiVersion("2.0")]
+        public IEnumerable<string> Get()
+        {
+            return new string[] { "Valor1", "Valor2", "Valor3" };
+        }
+
+        [AllowAnonymous]
         [HttpGet]
+        //[ResponseCache(Duration = 20)]
+        [ResponseCache(CacheProfileName = "PorDefecto30Segundos")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)] 
         [ProducesResponseType(StatusCodes.Status200OK)]
+        //[EnableCors("PoliticaCors")] //Aplica la pólitica CORS a este method.
 
         public IActionResult GetCategorias()
         {
@@ -36,7 +56,10 @@ namespace ApiCategorias.Controllers
             return Ok(listaCategoriasDto);
         }
 
+        [AllowAnonymous]
         [HttpGet("{CategoriaID:int}", Name = "GetCategoria")]
+        //[ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(CacheProfileName = "PorDefecto30Segundos")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -80,14 +103,14 @@ namespace ApiCategorias.Controllers
             }
 
 
-                var Categoria = _mapper.Map<Categoria>(crearCategoriaDto);
+                var categoria = _mapper.Map<Categoria>(crearCategoriaDto);
 
-            if (!_ctRepo.CrearCategoria(Categoria))
+            if (!_ctRepo.CrearCategoria(categoria))
             {
-                ModelState.AddModelError("", $"Algo salio mal guardando el registro{Categoria.Nombre}");
+                ModelState.AddModelError("", $"Algo salio mal guardando el registro{categoria.Nombre}");
                     return StatusCode(404, ModelState);
             }
-                return CreatedAtRoute("GetCategoria", new {CategoriaID = Categoria.ID}, Categoria);
+                return CreatedAtRoute("GetCategoria", new {CategoriaID = categoria.ID}, categoria);
         }
 
         [HttpPatch("{CategoriaID:int}", Name = "ActualizarPatchCategoria")]
@@ -114,11 +137,11 @@ namespace ApiCategorias.Controllers
                 return NotFound($"No se encontro la Categoria con ID {CategoriaID}");
             }
 
-            var Categoria = _mapper.Map<Categoria>(CategoriaDto);
+            var categoria = _mapper.Map<Categoria>(CategoriaDto);
 
-            if (!_ctRepo.ActualizarCategoria(Categoria))
+            if (!_ctRepo.ActualizarCategoria(categoria))
             {
-                ModelState.AddModelError("", $"Algo salio mal actualizando el registro{Categoria.Nombre}");
+                ModelState.AddModelError("", $"Algo salio mal actualizando el registro{categoria.Nombre}");
                 return StatusCode(500, ModelState);
             }
             return NoContent();
@@ -131,14 +154,14 @@ namespace ApiCategorias.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public IActionResult ActualizarPutCategoria(int CategoriaID, [FromBody] CategoriaDto CategoriaDto)
+        public IActionResult ActualizarPutCategoria(int categoriaId, [FromBody] CategoriaDto CategoriaDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (CategoriaDto == null || CategoriaID != CategoriaDto.ID)
+            if (CategoriaDto == null || categoriaId != CategoriaDto.ID)
             {
                 return BadRequest(ModelState);
             }
@@ -147,14 +170,14 @@ namespace ApiCategorias.Controllers
 
             if (CategoriaExistente == null)
             {
-                return NotFound($"No se encontro la Categoria con ID {CategoriaID}");
+                return NotFound($"No se encontro la Categoria con ID {categoriaId}");
             }
 
-            var Categoria = _mapper.Map<Categoria>(CategoriaDto);
+            var categoria = _mapper.Map<Categoria>(CategoriaDto);
 
-            if (!_ctRepo.ActualizarCategoria(Categoria))
+            if (!_ctRepo.ActualizarCategoria(categoria))
             {
-                ModelState.AddModelError("", $"Algo salio mal actualizando el registro{Categoria.Nombre}");
+                ModelState.AddModelError("", $"Algo salio mal actualizando el registro{categoria.Nombre}");
                 return StatusCode(500, ModelState);
             }
             return NoContent();
@@ -167,19 +190,19 @@ namespace ApiCategorias.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public IActionResult ActualizarPutCategoria(int CategoriaID)
+        public IActionResult BorrarCategoria(int categoriaId)
         {
 
-            if (!_ctRepo.ExisteCategoria(CategoriaID))  
+            if (!_ctRepo.ExisteCategoria(categoriaId))  
             {
                 return NotFound();
             }
 
-            var Categoria = _ctRepo.GetCategoria(CategoriaID);
+            var categoria = _ctRepo.GetCategoria(categoriaId);
 
-            if (!_ctRepo.BorrarCategoria(Categoria))
+            if (!_ctRepo.BorrarCategoria(categoria))
             {
-                ModelState.AddModelError("", $"Algo salio mal, borrando el registro{Categoria.Nombre}");
+                ModelState.AddModelError("", $"Algo salio mal, borrando el registro{categoria.Nombre}");
                 return StatusCode(500, ModelState);
             }
             return NoContent();
