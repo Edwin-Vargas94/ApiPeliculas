@@ -213,9 +213,9 @@ else
 {
     app.UseSwaggerUI(opciones =>
     {
-        opciones.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiPeliculasV1");
-        opciones.SwaggerEndpoint("/swagger/v2/swagger.json", "ApiPeliculasV2");
-        opciones.RoutePrefix = "";
+        opciones.SwaggerEndpoint("https://apipeliculas-production-c545.up.railway.app/swagger/v1/swagger.json", "ApiPeliculasV1");
+        opciones.SwaggerEndpoint("https://apipeliculas-production-c545.up.railway.app/swagger/v2/swagger.json", "ApiPeliculasV2");
+        opciones.RoutePrefix = string.Empty;
     });
 }
 
