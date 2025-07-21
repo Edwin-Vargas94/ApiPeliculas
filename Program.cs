@@ -173,10 +173,29 @@ builder.Services.AddSwaggerGen(options =>
 //3-cualquier dominio (Tener en cuenta seguridad)
 //Usamos de ejemplo del dominio: http://localhost:3223, se debe cambiar por el correcto
 //Se usa (*) para alls dominios.
-builder.Services.AddCors(p => p.AddPolicy("PoliticaCors", build =>
+
+// CORS dinámico basado en variable de entorno
+var corsOriginsRaw = Environment.GetEnvironmentVariable("CORS_ORIGINS");
+var corsOrigins = corsOriginsRaw?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+builder.Services.AddCors(options =>
 {
-    build.WithOrigins("http://localhost:3223").AllowAnyMethod().AllowAnyHeader();
-}));
+    options.AddPolicy("PoliticaCors", build =>
+    {
+        if (corsOrigins is not null && corsOrigins.Any())
+        {
+            build.WithOrigins(corsOrigins)
+                 .AllowAnyMethod()
+                 .AllowAnyHeader();
+        }
+        else
+        {
+            build.AllowAnyOrigin() // fallback para desarrollo
+                 .AllowAnyMethod()
+                 .AllowAnyHeader();
+        }
+    });
+});
 
 var app = builder.Build();
 app.UseSwagger();
