@@ -24,6 +24,7 @@ namespace ApiPeliculas.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
+            Console.WriteLine("Entrando al endpoint health");
             try
             {
                 var count = await _db.Pelicula.CountAsync();
