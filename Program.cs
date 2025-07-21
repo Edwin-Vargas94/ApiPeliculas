@@ -19,7 +19,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 //builder.Services.AddDbContext<AppDbContext>(opciones =>
 //opciones.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionSql")));
-var connectionString = Environment.GetEnvironmentVariable("ConnectionSql");
+//var connectionString = builder.Configuration.GetConnectionString("ConnectionSql");//Usar la cadena de conexxion de appsettings
+var connectionString =
+    Environment.GetEnvironmentVariable("ConnectionSql") ??
+    builder.Configuration.GetConnectionString("ConnectionSql");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
