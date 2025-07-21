@@ -213,6 +213,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+//Se agrega validacion para el uso de la variable port.
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
+{
+    app.Urls.Add($"http://*:{port}");
+}
 
 app.Run();
 
