@@ -205,7 +205,7 @@ app.UseStaticFiles();
 app.UseHttpsRedirection();
 
 //Soporte para CORS
-//app.UseCors("PoliticaCors");
+app.UseCors("PoliticaCors");
 
 //Soporte para Autenticación
 app.UseAuthentication();
