@@ -20,14 +20,19 @@ namespace ApiPeliculas.Controllers
         /// </summary>
         /// <returns>JSON con estado y número de películas registradas.</returns>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
-            Console.WriteLine("Entrando al endpoint health");
+            Console.WriteLine("Entrando al endpoint /api/health");
             try
             {
+                Console.WriteLine("Verificando si DbContext está funcionando...");
+
+                var conectado = await _db.Database.CanConnectAsync();
+                Console.WriteLine($"¿Puede conectar? {conectado}");
+
                 var count = await _db.Pelicula.CountAsync();
+                Console.WriteLine($"Películas registradas: {count}");
+
                 return Ok(new
                 {
                     status = "OK",
@@ -37,6 +42,7 @@ namespace ApiPeliculas.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"ERROR en /api/health: {ex.Message}");
                 return StatusCode(500, new
                 {
                     status = "ERROR",
@@ -45,5 +51,6 @@ namespace ApiPeliculas.Controllers
                 });
             }
         }
+
     }
 }
