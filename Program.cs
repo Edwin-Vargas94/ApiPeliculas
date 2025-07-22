@@ -221,7 +221,7 @@ else
 
 //Soporte para archivos estaticos como imagenes
 app.UseStaticFiles();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 //Soporte para CORS
 app.UseCors("PoliticaCors");
