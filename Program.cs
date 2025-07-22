@@ -236,8 +236,9 @@ app.MapControllers();
 var port = Environment.GetEnvironmentVariable("PORT");
 if (!string.IsNullOrEmpty(port))
 {
-    app.Urls.Add($"http://*:{port}");
+    app.Urls.Clear(); // Elimina el puerto 8080 por defecto
+    app.Urls.Add($"http://0.0.0.0:{port}");
+    Console.WriteLine($"Escuchando en puerto Railway: {port}");
 }
 
 app.Run();
-
