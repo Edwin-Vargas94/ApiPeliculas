@@ -1,0 +1,44 @@
+<h2>Listado de Películas</h2>
+
+<!-- 🔄 Loader mientras se cargan los datos -->
+<div *ngIf="peliculas.length === 0" class="mensaje">
+  <p>Cargando películas... 🕵️‍♂️</p>
+</div>
+
+<!-- 🎬 Tabla con datos -->
+<table *ngIf="peliculas.length > 0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Título</th>
+      <th>Descripcion</th>
+      <th>Duracion</th>
+      <th>Categoria</th>
+      <th>Fecha de creacion</th>
+      <th>Imagen</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let pelicula of peliculas">
+      <td>{{ pelicula.id }}</td>
+      <td>{{ pelicula.nombre }}</td>
+      <td>{{ pelicula.descripcion }}</td>
+      <td>{{ pelicula.duracion }} min</td>
+      <td>{{ pelicula.clasificacion }}</td>
+      <td>{{ pelicula.fechaCreacion | date: 'shortDate' }}</td>
+      <td>
+  <img [src]="pelicula.rutaImagen" alt="{{ pelicula.nombre }}" width="100">
+</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ⚠️ Mensaje si no hay películas (por error de API o lista vacía) -->
+<div *ngIf="peliculas.length === 0">
+  <p class="alerta">No se encontraron películas para mostrar.</p>
+</div>
+<div class="paginacion" style="display: flex; align-items: center; gap: 1rem;">
+  <button mat-raised-button color="primary" (click)="paginaAnterior()" [disabled]="paginaActual === 1">Anterior</button>
+  <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+  <button mat-raised-button color="accent" (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas">Siguiente</button>
+</div>

@@ -223,6 +223,8 @@ else
 app.UseStaticFiles();
 //app.UseHttpsRedirection();
 
+app.UseRouting();
+
 //Soporte para CORS
 app.UseCors("PoliticaCors");
 
