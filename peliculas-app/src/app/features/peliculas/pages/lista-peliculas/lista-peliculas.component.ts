@@ -20,7 +20,7 @@ export class ListaPeliculasComponent implements OnInit {
   peliculas: Pelicula[] = [];
   paginaActual = 1;
   totalPaginas = 1;
-  pageSize = 2; // Puedes ajustar esto según tu preferencia
+  pageSize = 5; // Puedes ajustar esto según tu preferencia
 
   constructor(private peliculaService: PeliculaService) {}
 

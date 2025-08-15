@@ -33,38 +33,44 @@ public pelicula: Pelicula = {
 // Si necesitas que pelicula2 sea opcional, puedes inicializarla en el constructor o ngOnInit
 // o dejarla como undefined y asignarle un valor más adelante.
 constructor(private peliculaService: PeliculaService) {}
+archivoSeleccionado: File | null = null;
 
-  crearPelicula() {
-    // Validación básica
-    if (
-      this.pelicula.nombre &&
-      this.pelicula.descripcion &&
-      this.pelicula.duracion &&
-      this.pelicula.clasificacion &&
-      this.pelicula.categoriaID
-    ) {
-      this.peliculaService.crearPelicula(this.pelicula).subscribe({
-        next: (response) => {
-          console.log('Película creada exitosamente:', response);
-          // Limpiar el formulario
-          this.pelicula = {
-            id: 0,
-            nombre: '',
-            descripcion: '',
-            duracion: 0,
-            rutaImagen: '',
-            clasificacion: 0,
-            fechaCreacion: '',
-            categoriaID: 0
-          };
-        },
-        error: (error) => {
-          console.error('Error al crear la película:', error);
-        }
-      });
-    } else {
-      console.error('Por favor, completa todos los campos antes de crear una película.');
-    }
+onArchivoSeleccionado(event: any) {
+  if (event.target.files.length > 0) {
+    this.archivoSeleccionado = event.target.files[0];
   }
+}
+
+crearPelicula() {
+  if (
+    this.pelicula.nombre &&
+    this.pelicula.descripcion &&
+    this.pelicula.duracion &&
+    this.pelicula.clasificacion &&
+    this.pelicula.categoriaID
+  ) {
+    this.peliculaService.crearPelicula(this.pelicula, this.archivoSeleccionado).subscribe({
+      next: (response) => {
+        console.log('Película creada exitosamente:', response);
+        this.pelicula = {
+          id: 0,
+          nombre: '',
+          descripcion: '',
+          duracion: 0,
+          rutaImagen: '',
+          clasificacion: 0,
+          fechaCreacion: '',
+          categoriaID: 0
+        };
+        this.archivoSeleccionado = null;
+      },
+      error: (error) => {
+        console.error('Error al crear la película:', error);
+      }
+    });
+  } else {
+    console.error('Por favor, completa todos los campos antes de crear una película.');
+  }
+}
 
 }

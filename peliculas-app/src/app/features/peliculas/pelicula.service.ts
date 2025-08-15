@@ -31,15 +31,28 @@ export class PeliculaService {
   return this.http.get(this.apiUrl, { params });
 }
 
-crearPelicula(pelicula: Pelicula): Observable<any> {
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkVkd2luRyIsInJvbGUiOiJBZG1pbiIsIm5iZiI6MTc1NTAyNzkwMywiZXhwIjoxNzU1NjMyNzAzLCJpYXQiOjE3NTUwMjc5MDN9.tu_je79EraZIcHR-KvElJeeS_RhJvR32AQl8rZtiHSM';
+crearPelicula(pelicula: Pelicula, archivo: File | null): Observable<any> {
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkVkd2luRyIsInJvbGUiOiJBZG1pbiIsIm5iZiI6MTc1NTA0OTEzNSwiZXhwIjoxNzU1NjUzOTM1LCJpYXQiOjE3NTUwNDkxMzV9.RijiXID_pl94t4ytWpi_3z0xB27ZNnj4yRHrEXP_pAo';
 
   const headers = {
     Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json'
+    // No pongas Content-Type porque el navegador lo establece automáticamente cuando usas FormData
   };
 
-  return this.http.post(this.apiUrl, pelicula, { headers });
+  const formData = new FormData();
+
+  formData.append('Nombre', pelicula.nombre);
+  formData.append('Descripcion', pelicula.descripcion);
+  formData.append('Duracion', pelicula.duracion.toString());
+  formData.append('Clasificacion', pelicula.clasificacion.toString());  // o el valor string si usas enum como texto
+  formData.append('CategoriaID', pelicula.categoriaID.toString());
+
+  if (archivo) {
+    formData.append('Imagen', archivo, archivo.name);
+  }
+
+  return this.http.post(this.apiUrl, formData, { headers });
 }
+
 
 }
