@@ -1,1 +1,24 @@
-<p>editar-pelicula works!</p>
+<form (ngSubmit)="actualizar()">
+
+  <input type="hidden" [(ngModel)]="pelicula.Id" name="Id">
+
+  <label>Nombre:</label>
+  <input type="text" [(ngModel)]="pelicula.nombre" name="nombre" required>
+
+  <label>Descripción:</label>
+  <textarea [(ngModel)]="pelicula.descripcion" name="descripcion" required></textarea>
+
+  <label>Duración (min):</label>
+  <input type="number" [(ngModel)]="pelicula.duracion" name="duracion" required>
+
+  <label>Clasificación:</label>
+  <input type="text" [(ngModel)]="pelicula.clasific" name="clasific" required>
+
+  <label>Categoría ID:</label>
+  <input type="number" [(ngModel)]="pelicula.idCategoria" name="idCategoria" required>
+
+  <label>Imagen:</label>
+  <input type="file" (change)="onFileSelected($event)">
+
+  <button type="submit">Guardar Cambios</button>
+</form>
