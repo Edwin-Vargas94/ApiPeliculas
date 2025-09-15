@@ -211,8 +211,8 @@ else
 {
     app.UseSwaggerUI(o =>
     {
-        o.SwaggerEndpoint("https://apipeliculas-production-c545.up.railway.app/swagger/v1/swagger.json", "ApiPeliculasV1");
-        o.SwaggerEndpoint("https://apipeliculas-production-c545.up.railway.app/swagger/v2/swagger.json", "ApiPeliculasV2");
+        o.SwaggerEndpoint("https://apipeliculas-rtsd.onrender.com/swagger/v1/swagger.json", "ApiPeliculasV1");
+        o.SwaggerEndpoint("https://apipeliculas-rtsd.onrender.com/swagger/v2/swagger.json", "ApiPeliculasV2");
         o.RoutePrefix = string.Empty; // Swagger en raíz
     });
 }
