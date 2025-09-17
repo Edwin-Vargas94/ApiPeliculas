@@ -1,6 +1,6 @@
 // src/environments/environment.ts
 export const environment = {
-  production: false,
-  apiUrl: 'https://apipeliculas-production-c545.up.railway.app',
+  production: true,
+  apiUrl: 'https://apipeliculas-rtsd.onrender.com',
    apiVersion: 'v1'
 };
