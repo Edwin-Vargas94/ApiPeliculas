@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ListaPeliculasComponent } from "../lista-peliculas/lista-peliculas.component";
 import { RouterOutlet } from '@angular/router';
 import { PeliculaService, Pelicula } from '../../pelicula.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // EGVG 07/08/25 Componente para crear una nueva película
 @Component({
@@ -32,7 +33,7 @@ public pelicula: Pelicula = {
 // Puedes cambiar estos valores según tus necesidades
 // Si necesitas que pelicula2 sea opcional, puedes inicializarla en el constructor o ngOnInit
 // o dejarla como undefined y asignarle un valor más adelante.
-constructor(private peliculaService: PeliculaService) {}
+constructor(private peliculaService: PeliculaService, private snackBar: MatSnackBar) {}
 archivoSeleccionado: File | null = null;
 
 onArchivoSeleccionado(event: any) {
@@ -52,6 +53,7 @@ crearPelicula() {
     this.peliculaService.crearPelicula(this.pelicula, this.archivoSeleccionado).subscribe({
       next: (response) => {
         console.log('Película creada exitosamente:', response);
+        this.snackBar.open('Película creada correctamente 🎉', 'Cerrar', { duration: 3000 });
         this.pelicula = {
           id: 0,
           nombre: '',

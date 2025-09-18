@@ -1,24 +1,152 @@
-<form (ngSubmit)="actualizar()">
+<!-- En tu index.html o app.component.html asegúrate de tener Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <input type="hidden" [(ngModel)]="pelicula.Id" name="Id">
+<div class="container mt-4">
+  <div *ngIf="loading" class="d-flex justify-content-center mb-3">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
 
-  <label>Nombre:</label>
-  <input type="text" [(ngModel)]="pelicula.nombre" name="nombre" required>
+  <hr/>
+  
+  <form #formPelicula="ngForm" (ngSubmit)="actualizar()" class="row g-3" novalidate>
+    <!-- Nombre/Título -->
+    <div class="col-md-6">
+      <label for="nombre" class="form-label">Nombre:</label>
+      <input type="text"
+             id="nombre"
+             name="nombre"
+             #nombre="ngModel"
+             [(ngModel)]="pelicula.nombre"
+             class="form-control"
+             [ngClass]="{'is-invalid': nombre.invalid && nombre.touched}"
+             [disabled]="loading"
+             required>
+      <div *ngIf="nombre.invalid && nombre.touched" class="invalid-feedback">
+        El nombre es obligatorio.
+      </div>
+    </div>
 
-  <label>Descripción:</label>
-  <textarea [(ngModel)]="pelicula.descripcion" name="descripcion" required></textarea>
+    <!-- Descripción -->
+    <div class="col-md-6">
+      <label for="descripcion" class="form-label">Descripción:</label>
+      <textarea id="descripcion"
+                name="descripcion"
+                #descripcion="ngModel"
+                [(ngModel)]="pelicula.descripcion"
+                class="form-control"
+                [ngClass]="{'is-invalid': descripcion.invalid && descripcion.touched}"
+                [disabled]="loading"
+                rows="3"
+                required></textarea>
+      <div *ngIf="descripcion.invalid && descripcion.touched" class="invalid-feedback">
+        La descripción es obligatoria.
+      </div>
+    </div>
 
-  <label>Duración (min):</label>
-  <input type="number" [(ngModel)]="pelicula.duracion" name="duracion" required>
+    <!-- Duración -->
+    <div class="col-md-4">
+      <label for="duracion" class="form-label">Duración (minutos):</label>
+      <input type="number"
+             id="duracion"
+             name="duracion"
+             #duracion="ngModel"
+             [(ngModel)]="pelicula.duracion"
+             class="form-control"
+             [ngClass]="{'is-invalid': duracion.invalid && duracion.touched}"
+             [disabled]="loading"
+             required 
+             min="1"
+             max="600">
+      <div *ngIf="duracion.invalid && duracion.touched" class="invalid-feedback">
+        <span *ngIf="duracion.errors?.['required']">La duración es obligatoria.</span>
+        <span *ngIf="duracion.errors?.['min']">La duración debe ser mayor que 0.</span>
+        <span *ngIf="duracion.errors?.['max']">La duración no puede exceder 600 minutos.</span>
+      </div>
+    </div>
 
-  <label>Clasificación:</label>
-  <input type="text" [(ngModel)]="pelicula.clasific" name="clasific" required>
+  <!-- Clasificación -->
+<div class="col-md-4">
+  <label for="clasificacion" class="form-label">Clasificación:</label>
+  <select id="clasificacion"
+          name="clasificacion"
+          #clasificacion="ngModel"
+          [(ngModel)]="pelicula.clasificacion"
+          class="form-select"
+          [ngClass]="{'is-invalid': clasificacion.invalid && clasificacion.touched}"
+          [disabled]="loading"
+          required>
+    <option value="">Seleccionar clasificación</option>
+    <option *ngFor="let c of clasificaciones" [value]="c.id">{{ c.nombre }}</option>
+  </select>
+  <div *ngIf="clasificacion.invalid && clasificacion.touched" class="invalid-feedback">
+    La clasificación es obligatoria.
+  </div>
+</div>
 
-  <label>Categoría ID:</label>
-  <input type="number" [(ngModel)]="pelicula.idCategoria" name="idCategoria" required>
+  <!-- Categoría -->
+<div class="col-md-4">
+  <label for="categoriaID" class="form-label">Categoría:</label>
+  <select id="categoriaID"
+          name="categoriaID"
+          #categoriaID="ngModel"
+          [(ngModel)]="pelicula.categoriaID"
+          class="form-select"
+          [ngClass]="{'is-invalid': categoriaID.invalid && categoriaID.touched}"
+          [disabled]="loading"
+          required>
+    <option value="0">Seleccionar categoría</option>
+    <option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nombre }}</option>
+  </select>
+  <div *ngIf="categoriaID.invalid && categoriaID.touched" class="invalid-feedback">
+    La categoría es obligatoria.
+  </div>
+</div>
 
-  <label>Imagen:</label>
-  <input type="file" (change)="onFileSelected($event)">
 
-  <button type="submit">Guardar Cambios</button>
-</form>
+    <!-- Input para archivo -->
+    <div class="col-md-6">
+      <label for="imagen" class="form-label">Imagen:</label>
+      <input type="file" 
+             id="imagen" 
+             (change)="onArchivoSeleccionado($event)" 
+             class="form-control" 
+             accept="image/*"
+             [disabled]="loading" />
+      <div class="form-text">
+        Formatos aceptados: JPG, PNG, GIF, WEBP. Tamaño máximo: 5MB
+      </div>
+      
+      <div *ngIf="imagenSeleccionada" class="mt-2 p-2 bg-light rounded">
+        <small class="text-muted">
+          <strong>Archivo seleccionado:</strong> {{imagenSeleccionada.name}}<br>
+          <strong>Tamaño:</strong> {{(imagenSeleccionada.size / 1024 / 1024).toFixed(2)}} MB
+        </small>
+      </div>
+    </div>
+
+    <!-- Información adicional o espacio -->
+    <div class="col-md-6">
+      <!-- Puedes agregar más campos aquí si es necesario -->
+    </div>
+
+    <!-- Botones -->
+    <div class="col-12 text-end">
+      <button type="submit"
+              [disabled]="formPelicula.invalid || loading"
+              class="btn btn-primary me-2">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+        <span *ngIf="loading">Actualizando...</span>
+        <span *ngIf="!loading">Editar Película</span>
+      </button>
+      
+      <button type="button"
+              class="btn btn-secondary"
+              [disabled]="loading"
+              (click)="cancelar()">
+        Cancelar
+      </button>
+    </div>
+  </form>
+</div>

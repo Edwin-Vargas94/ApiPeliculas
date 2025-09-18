@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '/Users/edwinvargas/Desktop/Api _Curso/ApiPeliculas/peliculas-app/src/environments/environment'; // ajusta la ruta si es necesario
 
@@ -32,7 +32,7 @@ export class PeliculaService {
 }
 
 crearPelicula(pelicula: Pelicula, archivo: File | null): Observable<any> {
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkVkd2luRyIsInJvbGUiOiJBZG1pbiIsIm5iZiI6MTc1NTM1ODE2MiwiZXhwIjoxNzU1OTYyOTYyLCJpYXQiOjE3NTUzNTgxNjJ9.zLRxZ__RR4hny6dxx2y9Rm0YscQ71ePfx8jUknhkV5g';
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImVkd2luIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzU4MTc2Mzc2LCJleHAiOjE3NTg3ODExNzYsImlhdCI6MTc1ODE3NjM3Nn0.P9iUbEOLgUo00g1kcpZ3tZtOggNJBVRuUOLYOhRHQEc';
 
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ crearPelicula(pelicula: Pelicula, archivo: File | null): Observable<any> {
 
 // ejemplo en servicio
 actualizarPelicula(pelicula: any, imagen?: File): Observable<any> {
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkVkd2luRyIsInJvbGUiOiJBZG1pbiIsIm5iZiI6MTc1NTM1ODE2MiwiZXhwIjoxNzU1OTYyOTYyLCJpYXQiOjE3NTUzNTgxNjJ9.zLRxZ__RR4hny6dxx2y9Rm0YscQ71ePfx8jUknhkV5g';
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImVkd2luIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzU4MTc2Mzc2LCJleHAiOjE3NTg3ODExNzYsImlhdCI6MTc1ODE3NjM3Nn0.P9iUbEOLgUo00g1kcpZ3tZtOggNJBVRuUOLYOhRHQEc';
 
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -84,6 +84,18 @@ actualizarPelicula(pelicula: any, imagen?: File): Observable<any> {
 getPeliculaPorId(id: number): Observable<Pelicula> {
   return this.http.get<Pelicula>(`${this.apiUrl}/${id}`);
 
+}
+
+// En pelicula.service.ts
+eliminarPelicula(id: number): Observable<any> {
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImVkd2luIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzU4MTc2Mzc2LCJleHAiOjE3NTg3ODExNzYsImlhdCI6MTc1ODE3NjM3Nn0.P9iUbEOLgUo00g1kcpZ3tZtOggNJBVRuUOLYOhRHQEc';
+  
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  });
+
+  return this.http.delete(`${this.apiUrl}/${id}`, { headers });
 }
 
 }

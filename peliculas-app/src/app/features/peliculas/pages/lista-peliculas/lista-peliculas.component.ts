@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { PeliculaService, Pelicula } from '../../pelicula.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { HomeComponent } from "../home/home.component";
-import { EmpleadpPruebaComponent } from "../empleado-prueba/empleado-prueba.component";
 import { RouterLink } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -17,6 +15,8 @@ import { ViewChild } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   standalone: true,
@@ -30,17 +30,34 @@ import { MatTableModule } from '@angular/material/table';
   
 })
 export class ListaPeliculasComponent implements OnInit {
-displayedColumns: string[] = ['id', 'nombre', 'descripcion', 'duracion', 'clasificacion', 'fechaCreacion', 'imagen', 'acciones'];
+  displayedColumns: string[] = ['id', 'nombre', 'descripcion', 'duracion', 'clasificacion', 'fechaCreacion', 'imagen', 'acciones'];
   dataSource = new MatTableDataSource<Pelicula>();
   isLoading = true;
   paginaActual = 1;
   totalPaginas = 1;
+  apiUrl = 'https://apipeliculas-rtsd.onrender.com'; // Reemplaza con la URL real de tu API
+
+  pelicula: Pelicula = {
+    id: 0,
+    nombre: '',
+    descripcion: '',
+    duracion: 0,
+    rutaImagen: '',
+    clasificacion: 0,
+    fechaCreacion: '',
+    categoriaID: 0
+  };
+
+  archivoSeleccionado: File | null = null;
 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
-  constructor(private peliculaService: PeliculaService, private snackBar: MatSnackBar) {}
+  constructor(
+    private peliculaService: PeliculaService,
+    private snackBar: MatSnackBar,
+    private http: HttpClient
+  ) {}
 
   ngOnInit(): void {
     this.cargarPeliculas();
@@ -81,5 +98,35 @@ displayedColumns: string[] = ['id', 'nombre', 'descripcion', 'duracion', 'clasif
       this.cargarPeliculas();
     }
   }
+
+// En lista-peliculas.component.ts
+eliminarPelicula(id: number): void {
+  // Opcional: Mostrar confirmación antes de eliminar
+  if (confirm('¿Estás seguro de que deseas eliminar esta película?')) {
+    
+    this.peliculaService.eliminarPelicula(id).subscribe({
+      next: (response) => {
+        console.log('Película eliminada exitosamente:', response);
+        
+        // Mostrar mensaje de éxito
+        this.snackBar.open('Película eliminada correctamente ✅', 'Cerrar', { 
+          duration: 3000 
+        });
+        
+        // Recargar la lista de películas
+        this.cargarPeliculas();
+      },
+      error: (error) => {
+        console.error('Error al eliminar película:', error);
+        
+        // Mostrar mensaje de error
+        this.snackBar.open('Error al eliminar la película ❌', 'Cerrar', { 
+          duration: 3000 
+        });
+      }
+    });
+  }
+}
+
 }
 

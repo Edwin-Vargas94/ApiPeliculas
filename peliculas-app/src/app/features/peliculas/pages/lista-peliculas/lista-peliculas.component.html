@@ -58,8 +58,11 @@
       <button mat-icon-button [routerLink]="['/editar', p.id]" matTooltip="Editar película">
         <mat-icon color="primary">edit</mat-icon>
       </button>
-      <button mat-icon-button matTooltip="Eliminar película">
+      <button mat-icon-button (click)="eliminarPelicula(p.id)" matTooltip="Eliminar película">
         <mat-icon color="warn">delete</mat-icon>
+      </button>
+       <button mat-icon-button [routerLink]="['/crear']" matTooltip="Crear película">
+        <mat-icon color="primary">add</mat-icon>
       </button>
     </td>
   </ng-container>

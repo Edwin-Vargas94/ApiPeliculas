@@ -1,18 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditarPelicula } from './editar-pelicula';
+// If the component file is named 'editar-pelicula.component.ts', update the import as follows:
+import { EditarPeliculaComponent } from './editar-pelicula.component';
 
 describe('EditarPelicula', () => {
-  let component: EditarPelicula;
-  let fixture: ComponentFixture<EditarPelicula>;
+  let component: EditarPeliculaComponent;
+  let fixture: ComponentFixture<EditarPeliculaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditarPelicula]
+      imports: [EditarPeliculaComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EditarPelicula);
+    fixture = TestBed.createComponent(EditarPeliculaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
