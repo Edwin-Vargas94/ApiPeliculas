@@ -49,9 +49,9 @@ export class UserRegistrationService {
    */
   getRolesDisponibles(): string[] {
     if (this.isCurrentUserAdmin()) {
-      return ['Usuario', 'Admin'];
+      return ['Registrado', 'Admin'];
     }
     // Si no es admin, solo puede crear usuarios normales
-    return ['Usuario'];
+    return ['Registrado'];
   }
 }

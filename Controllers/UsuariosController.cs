@@ -35,7 +35,8 @@ namespace ApiPeliculas.Controllers
         [HttpGet]
         [ResponseCache(CacheProfileName = "PorDefecto30Segundos")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
 
         public IActionResult GetUsuarios()
         {
@@ -78,6 +79,20 @@ namespace ApiPeliculas.Controllers
 
         public async Task<IActionResult> Registro([FromBody] UsuarioRegistroDto usuarioRegistroDto)
         {
+            //240925 EGVG: Validar si el usuario quiere crear un Admin
+            if (usuarioRegistroDto.Role == "Admin")
+            {
+                //240925 EGVG: Verificar si el solicitante está autenticado y tiene rol Admin
+                if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+                {
+                    _respuestaApi.StatusCode = HttpStatusCode.Forbidden;
+                    _respuestaApi.IsSuccess = false;
+                    _respuestaApi.ErrorMessages.Add("Solo un administrador puede crear otros administradores");
+                    return StatusCode(StatusCodes.Status403Forbidden, _respuestaApi);
+                }
+            }
+
+            //240925 EGVG: Validar que el nombre de usuario sea único
             bool validarNombreUsuarioUnico = _usRepo.IsUniqueUser(usuarioRegistroDto.NombreUsuario);
             if (!validarNombreUsuarioUnico)
             {

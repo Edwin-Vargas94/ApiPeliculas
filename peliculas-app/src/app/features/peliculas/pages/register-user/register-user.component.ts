@@ -43,11 +43,11 @@ export class RegisterUserComponent implements OnInit {
   // Si el usuario no está logueado => forzar rol Usuario
   if (!this.authService.isAuthenticated()) {
     this.isAdmin = false;
-    this.userData.role = 'Usuario';
+    this.userData.role = 'Registrado';
   } else {
     // Si está logueado y es admin puede elegir rol
     if (!this.isAdmin) {
-      this.userData.role = 'Usuario';
+      this.userData.role = 'Registrado';
     }
   }
 }
@@ -119,7 +119,7 @@ export class RegisterUserComponent implements OnInit {
       nombreUsuario: '',
       nombre: '',
       password: '',
-      role: this.isAdmin ? '' : 'Usuario'
+      role: this.isAdmin ? '' : 'Registrado'
     };
     this.confirmPassword = '';
   }

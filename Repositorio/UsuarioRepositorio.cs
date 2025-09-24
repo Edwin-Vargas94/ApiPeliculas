@@ -112,13 +112,30 @@ namespace ApiPeliculas.Repositorio
                 throw new Exception(string.Join("; ", result.Errors.Select(e => e.Description)));
             }
 
+            //240925 EGVG: Crear roles si aún no existen
             if (!await _roleManager.RoleExistsAsync("Admin"))
             {
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+            if (!await _roleManager.RoleExistsAsync("Registrado"))
+            {
                 await _roleManager.CreateAsync(new IdentityRole("Registrado"));
             }
 
-            await _userManager.AddToRoleAsync(usuario, "Admin");
+            //240925 EGVG: Determinar el rol a asignar
+            var rol = string.IsNullOrEmpty(usuarioRegistroDto.Role) ? "Registrado" : usuarioRegistroDto.Role;
+
+            //240925 EGVG: Validación extra: un anónimo nunca debería poder registrar Admins
+            if (rol == "Admin")
+            {
+                // Si el flujo llega hasta aquí, significa que el Controller ya validó que es Admin
+                // así que podemos asignar sin problema
+                await _userManager.AddToRoleAsync(usuario, "Admin");
+            }
+            else
+            {
+                await _userManager.AddToRoleAsync(usuario, "Registrado");
+            }
 
             return _mapper.Map<UsuarioDatosDto>(usuario);
         }
