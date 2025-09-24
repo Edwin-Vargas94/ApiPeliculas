@@ -35,23 +35,23 @@ export class RegisterUserComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit() {
-    // Verificar autenticación
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
-      return;
-    }
+ ngOnInit() {
+  this.currentUserInfo = this.authService.getUserInfo();
+  this.isAdmin = this.userRegistrationService.isCurrentUserAdmin();
+  this.rolesDisponibles = this.userRegistrationService.getRolesDisponibles();
 
-    // Obtener información del usuario actual
-    this.currentUserInfo = this.authService.getUserInfo();
-    this.isAdmin = this.userRegistrationService.isCurrentUserAdmin();
-    this.rolesDisponibles = this.userRegistrationService.getRolesDisponibles();
-    
-    // Establecer rol por defecto
+  // Si el usuario no está logueado => forzar rol Usuario
+  if (!this.authService.isAuthenticated()) {
+    this.isAdmin = false;
+    this.userData.role = 'Usuario';
+  } else {
+    // Si está logueado y es admin puede elegir rol
     if (!this.isAdmin) {
       this.userData.role = 'Usuario';
     }
   }
+}
+
 
   onRegister() {
     if (!this.validateForm()) {
