@@ -4,10 +4,17 @@
 <p>Aquí puedes encontrar las últimas novedades y recomendaciones de películas.</p>
 <p>Navega a través del menú para explorar nuestra colección de películas, crear nuevas peliculas o edita las existentes.</p>
 <p>¡Disfruta de tu experiencia cinematográfica!</p>
-
 <hr>
-<nav>
-    <a [routerLink]="['/crear']">Crear Nueva Película</a>
-    -
-    <a [routerLink]="['/lista-peliculas']">Ver Lista de Películas</a>
+
+<div *ngIf="!isLoggedIn" class="auth-section">
+  <p><strong>Para gestionar películas necesitas iniciar sesión</strong></p>
+  <a [routerLink]="['/login']" class="login-btn">Iniciar Sesión</a>
+</div>
+
+<nav *ngIf="isLoggedIn">
+  <a [routerLink]="['/crear']">Crear Nueva Película</a>
+  -
+  <a [routerLink]="['/lista-peliculas']">Ver Lista de Películas</a>
+  -
+  <button (click)="logout()" class="logout-btn">Cerrar Sesión</button>
 </nav>

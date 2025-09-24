@@ -7,6 +7,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { ListaPeliculasComponent } from './pages/lista-peliculas/lista-peliculas.component';
 import { CrearPeliculaComponent } from './pages/crear-pelicula/crear-pelicula.component';
 import { EditarPeliculaComponent } from './pages/editar-pelicula/editar-pelicula.component';
+import { LoginComponent } from './pages/login/login.component';
 
 export const routes: Routes = [
   //{ path: '', component: ListaPeliculasComponent },
@@ -14,7 +15,8 @@ export const routes: Routes = [
   { path: '', redirectTo: 'pagina-principal', pathMatch: 'full' },
   { path: 'pagina-principal', component: HomeComponent },
   { path: 'crear', component: CrearPeliculaComponent },
-  { path: 'editar/:id', component: EditarPeliculaComponent }
+  { path: 'editar/:id', component: EditarPeliculaComponent },
+  { path: 'login', component: LoginComponent },
 ];
 
 //export const appRoutingProviders: any[] = [];

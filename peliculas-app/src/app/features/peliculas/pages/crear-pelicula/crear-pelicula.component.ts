@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ListaPeliculasComponent } from "../lista-peliculas/lista-peliculas.component";
 import { RouterOutlet } from '@angular/router';
-import { PeliculaService, Pelicula } from '../../pelicula.service';
+import { PeliculaService, Pelicula } from '../../../../services/pelicula.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // EGVG 07/08/25 Componente para crear una nueva película

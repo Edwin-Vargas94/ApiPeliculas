@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PeliculaService, Pelicula } from '../../pelicula.service';
+import { PeliculaService, Pelicula } from '../../../../services/pelicula.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { RouterLink } from '@angular/router';

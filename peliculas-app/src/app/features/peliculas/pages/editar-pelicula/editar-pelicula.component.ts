@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { PeliculaService } from '../../pelicula.service';
+import { PeliculaService } from '../../../../services/pelicula.service';
 
 interface Pelicula {
   id: number;
