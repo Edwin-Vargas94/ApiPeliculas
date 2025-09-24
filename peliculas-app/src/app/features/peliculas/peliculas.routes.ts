@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from '../../guards/guards';
+import { RegisterUserComponent } from './pages/register-user/register-user.component';
 //import { Routes, RouterModule } from '@angular/router';
 //import { ModuleWithProviders } from '@angular/core';
 
@@ -9,6 +11,7 @@ import { CrearPeliculaComponent } from './pages/crear-pelicula/crear-pelicula.co
 import { EditarPeliculaComponent } from './pages/editar-pelicula/editar-pelicula.component';
 import { LoginComponent } from './pages/login/login.component';
 
+
 export const routes: Routes = [
   //{ path: '', component: ListaPeliculasComponent },
   { path: 'lista-peliculas', component: ListaPeliculasComponent },
@@ -17,6 +20,8 @@ export const routes: Routes = [
   { path: 'crear', component: CrearPeliculaComponent },
   { path: 'editar/:id', component: EditarPeliculaComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'register-user', component: RegisterUserComponent, canActivate: [AuthGuard] // Solo usuarios autenticados
+}
 ];
 
 //export const appRoutingProviders: any[] = [];

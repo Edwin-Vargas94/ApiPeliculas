@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '/Users/edwinvargas/Desktop/Api _Curso/ApiPeliculas/peliculas-app/src/environments/environment'; // ajusta la ruta si es necesario
 
@@ -21,50 +21,31 @@ export interface Pelicula {
 export class PeliculaService {
   private apiUrl = `${environment.apiUrl}/api/v1/peliculas`;
 
-  //private apiUrl = `${environment.apiUrl}/api/${environment.apiVersion}/peliculas`;
-
-
   constructor(private http: HttpClient) {}
 
   obtenerPeliculas(pageNumber: number = 1, pageSize: number = 4): Observable<any> {
-  const params = { pageNumber, pageSize };
-  return this.http.get(this.apiUrl, { params });
-}
-
-crearPelicula(pelicula: Pelicula, archivo: File | null): Observable<any> {
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImVkd2luIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzU4MTc2Mzc2LCJleHAiOjE3NTg3ODExNzYsImlhdCI6MTc1ODE3NjM3Nn0.P9iUbEOLgUo00g1kcpZ3tZtOggNJBVRuUOLYOhRHQEc';
-
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    // No pongas Content-Type porque el navegador lo establece automáticamente cuando usas FormData
-  };
-
-  const formData = new FormData();
-
-  formData.append('Nombre', pelicula.nombre);
-  formData.append('Descripcion', pelicula.descripcion);
-  formData.append('Duracion', pelicula.duracion.toString());
-  formData.append('Clasificacion', pelicula.clasificacion.toString());  // o el valor string si usas enum como texto
-  formData.append('CategoriaID', pelicula.categoriaID.toString());
-
-  if (archivo) {
-    formData.append('Imagen', archivo, archivo.name);
+    const params = { pageNumber, pageSize };
+    return this.http.get(this.apiUrl, { params });
   }
 
-  return this.http.post(this.apiUrl, formData, { headers });
-}
+  crearPelicula(pelicula: Pelicula, archivo: File | null): Observable<any> {
+    const formData = new FormData();
+    formData.append('Nombre', pelicula.nombre);
+    formData.append('Descripcion', pelicula.descripcion);
+    formData.append('Duracion', pelicula.duracion.toString());
+    formData.append('Clasificacion', pelicula.clasificacion.toString());
+    formData.append('CategoriaID', pelicula.categoriaID.toString());
 
-// ejemplo en servicio
-actualizarPelicula(pelicula: any, imagen?: File): Observable<any> {
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImVkd2luIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzU4MTc2Mzc2LCJleHAiOjE3NTg3ODExNzYsImlhdCI6MTc1ODE3NjM3Nn0.P9iUbEOLgUo00g1kcpZ3tZtOggNJBVRuUOLYOhRHQEc';
+    if (archivo) {
+      formData.append('Imagen', archivo, archivo.name);
+    }
 
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    // No pongas Content-Type porque el navegador lo establece automáticamente cuando usas FormData
-  };  
-  const formData = new FormData();
+    // El interceptor se encarga de agregar el token automáticamente
+    return this.http.post(this.apiUrl, formData);
+  }
 
-    // Los nombres deben coincidir con tu ActualizarPeliculaDto en C#
+  actualizarPelicula(pelicula: any, imagen?: File): Observable<any> {
+    const formData = new FormData();
     formData.append('Id', pelicula.id.toString());
     formData.append('Nombre', pelicula.nombre);
     formData.append('Descripcion', pelicula.descripcion);
@@ -72,30 +53,21 @@ actualizarPelicula(pelicula: any, imagen?: File): Observable<any> {
     formData.append('Clasificacion', pelicula.clasificacion);
     formData.append('CategoriaID', pelicula.categoriaID.toString());
 
-    // Solo enviamos la imagen si hay una nueva
     if (imagen) {
       formData.append('Imagen', imagen);
     }
 
-    return this.http.patch(`${this.apiUrl}/${pelicula.id}`, formData, { headers });
+    // El interceptor se encarga de agregar el token automáticamente
+    return this.http.patch(`${this.apiUrl}/${pelicula.id}`, formData);
   }
 
+  getPeliculaPorId(id: number): Observable<Pelicula> {
+    // El interceptor se encarga de agregar el token automáticamente
+    return this.http.get<Pelicula>(`${this.apiUrl}/${id}`);
+  }
 
-getPeliculaPorId(id: number): Observable<Pelicula> {
-  return this.http.get<Pelicula>(`${this.apiUrl}/${id}`);
-
-}
-
-// En pelicula.service.ts
-eliminarPelicula(id: number): Observable<any> {
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImVkd2luIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzU4MTc2Mzc2LCJleHAiOjE3NTg3ODExNzYsImlhdCI6MTc1ODE3NjM3Nn0.P9iUbEOLgUo00g1kcpZ3tZtOggNJBVRuUOLYOhRHQEc';
-  
-  const headers = new HttpHeaders({
-    'Authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json'
-  });
-
-  return this.http.delete(`${this.apiUrl}/${id}`, { headers });
-}
-
+  eliminarPelicula(id: number): Observable<any> {
+    // El interceptor se encarga de agregar el token automáticamente
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
 }

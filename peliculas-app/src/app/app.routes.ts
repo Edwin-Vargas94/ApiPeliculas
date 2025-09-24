@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { LoginComponent } from './features/peliculas/pages/login/login.component';
+import { AuthGuard, NoAuthGuard } from './guards/guards';
 
 export const routes: Routes = [
 
@@ -10,6 +12,11 @@ export const routes: Routes = [
   },
   
   
+   {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [NoAuthGuard]
+  },
   // Rutas de películas (lazy loading)
   {
     path: 'peliculas',

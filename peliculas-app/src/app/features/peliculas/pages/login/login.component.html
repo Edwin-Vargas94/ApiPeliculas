@@ -1,40 +1,48 @@
 <div class="login-container">
-  <h2>Iniciar Sesión</h2>
-  <form (ngSubmit)="onLogin()" #loginForm="ngForm">
-    <div class="form-group">
-      <label for="username">Usuario:</label>
-      <input 
-        type="text" 
-        id="username"
-        name="username"
-        [(ngModel)]="credentials.username" 
-        required
-        #username="ngModel">
-      <div *ngIf="username.invalid && username.touched" class="error">
-        El usuario es requerido
-      </div>
-    </div>
-    
-    <div class="form-group">
-      <label for="password">Contraseña:</label>
-      <input 
-        type="password" 
-        id="password"
-        name="password"
-        [(ngModel)]="credentials.password" 
-        required
-        #password="ngModel">
-      <div *ngIf="password.invalid && password.touched" class="error">
-        La contraseña es requerida
-      </div>
-    </div>
-    
-    <button type="submit" [disabled]="loginForm.invalid || isLoading">
-      {{isLoading ? 'Iniciando...' : 'Iniciar Sesión'}}
-    </button>
-    
-    <div *ngIf="errorMessage" class="error">
-      {{errorMessage}}
-    </div>
-  </form>
+    <h2>Iniciar Sesión</h2>
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+        <div class="form-group">
+            <label for="username">Usuario:</label>
+            <input
+                type="text"
+                id="username"
+                name="username"
+                [(ngModel)]="credentials.username"
+                (input)="onInputChange()"
+                required
+                #username="ngModel"
+                placeholder="Ingresa tu usuario">
+            <div *ngIf="username.invalid && username.touched" class="error">
+                El usuario es requerido
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                [(ngModel)]="credentials.password"
+                (input)="onInputChange()"
+                required
+                #password="ngModel"
+                placeholder="Ingresa tu contraseña">
+            <div *ngIf="password.invalid && password.touched" class="error">
+                La contraseña es requerida
+            </div>
+        </div>
+
+        <button 
+            type="submit" 
+            class="btn-login"
+            [disabled]="loginForm.invalid || isLoading">
+            <span *ngIf="isLoading" class="loading-spinner"></span>
+            {{isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}}
+        </button>
+
+        <div *ngIf="errorMessage" class="error">
+            {{errorMessage}}
+        </div>
+    </form>
 </div>

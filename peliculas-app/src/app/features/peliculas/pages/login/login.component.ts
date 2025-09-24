@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from '@/app/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -19,11 +19,16 @@ export class LoginComponent {
   
   isLoading = false;
   errorMessage = '';
+  returnUrl = '/'; // URL a la que redirigir después del login
 
   constructor(
     private authService: AuthService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    // Obtener la URL de retorno desde los query params
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+  }
 
   onLogin() {
     if (!this.credentials.username || !this.credentials.password) {
@@ -37,35 +42,40 @@ export class LoginComponent {
     this.authService.login(this.credentials).subscribe({
       next: (response) => {
         console.log('Respuesta del login:', response);
-        
         if (response.isSuccess && response.result && response.result.token) {
           console.log('Login exitoso');
-          // Navegar al home y recargar la página para actualizar el estado
-          this.router.navigate(['/']).then(() => {
-            window.location.reload();
-          });
+          // Navegar a la URL de retorno sin recargar la página
+          this.router.navigate([this.returnUrl]);
         } else {
           this.errorMessage = response.errorMessages?.[0] || 'Error en el login';
         }
       },
       error: (error) => {
         console.error('Error en login:', error);
-        
         if (error.status === 400 && error.error) {
-          // Manejar errores de validación de tu API
           if (error.error.errorMessages && error.error.errorMessages.length > 0) {
             this.errorMessage = error.error.errorMessages[0];
           } else {
             this.errorMessage = 'Usuario o contraseña incorrectos';
           }
+        } else if (error.status === 401) {
+          this.errorMessage = 'Credenciales inválidas';
+        } else if (error.status === 0) {
+          this.errorMessage = 'Error de conexión. Verifica tu conexión a internet.';
         } else {
           this.errorMessage = 'Error de conexión. Intenta nuevamente.';
         }
-        this.isLoading = false;
       },
       complete: () => {
         this.isLoading = false;
       }
     });
+  }
+
+  onInputChange() {
+    // Limpiar mensajes de error cuando el usuario empiece a escribir
+    if (this.errorMessage) {
+      this.errorMessage = '';
+    }
   }
 }
