@@ -20,9 +20,10 @@ export const routes: Routes = [
   { path: 'crear', component: CrearPeliculaComponent },
   { path: 'editar/:id', component: EditarPeliculaComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'register-user', component: RegisterUserComponent, canActivate: [AuthGuard] // Solo usuarios autenticados
-}
+  { path: 'register-user', component: RegisterUserComponent}
 ];
 
+
+//// Solo usuarios autenticados: canActivate: [AuthGuard] .
 //export const appRoutingProviders: any[] = [];
 //export const routing: ModuleWithProviders<RouterModule> = RouterModule.forRoot(routes);
